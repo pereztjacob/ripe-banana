@@ -76,7 +76,7 @@ describe('studio api', () => {
             });
     });
 
-    it('deletes a stuido', () => {
+    it('deletes a studio', () => {
         return request.delete(`/studios/${studioB._id}`)
             .then(() => {
                 return Studio.findById(studioB._id);

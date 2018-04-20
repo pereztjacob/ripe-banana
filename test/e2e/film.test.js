@@ -33,4 +33,24 @@ describe.only('film api', () => {
                 film = body;
             });
     });
+
+    const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
+
+    it('gets film by id', () => {
+        return Film.create(filmB).then(roundTrip)
+            .then(saved => {
+                filmB = saved;
+                return request.get(`/films/${filmB._id}`);
+            })
+            .then(({ body }) => {
+                assert.deepEqual(body, filmB);
+            });
+    });
+
+    it('gets all films', () => {
+        return request.get('/films')
+            .then(({ body }) => {
+                assert.deepEqual(body, [film, filmB]);
+            });
+    });
 });
