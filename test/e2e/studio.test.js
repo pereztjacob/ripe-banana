@@ -61,4 +61,18 @@ describe.only('studio api', () => {
                 assert.deepEqual(body, [{ _id, name }, obj]);
             });
     });
+
+    it('update a studio', () => {
+        studioA.name = 'New name';
+
+        return request.put(`/studios/${studioA._id}`)
+            .send(studioA)
+            .then(({ body }) => {
+                assert.deepEqual(body, studioA);
+                return Studio.findById(studioA._id).then(roundTrip);
+            })
+            .then(updated => {
+                assert.deepEqual(updated, studioA);
+            });
+    });
 });
