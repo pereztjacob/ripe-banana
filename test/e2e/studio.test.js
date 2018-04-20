@@ -75,4 +75,14 @@ describe.only('studio api', () => {
                 assert.deepEqual(updated, studioA);
             });
     });
+
+    it('deletes a stuido', () => {
+        return request.delete(`/studios/${studioB._id}`)
+            .then(() => {
+                return Studio.findById(studioB._id);
+            })
+            .then(found => {
+                assert.isNull(found);
+            });
+    });
 });
