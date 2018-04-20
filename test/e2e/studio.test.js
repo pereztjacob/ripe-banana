@@ -3,7 +3,7 @@ const request = require('./request');
 const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
 
-describe('studio api', () => {
+describe.only('studio api', () => {
     before(() => dropCollection('studios'));
 
     let studioA = {
@@ -47,8 +47,18 @@ describe('studio api', () => {
                 return request.get(`/studios/${studioB._id}`);
             })
             .then(({ body }) => {
-                const { _id, name } = studioB;
-                assert.deepEqual(body, { _id, name });
+                assert.deepEqual(body, studioB);
+            });
+    });
+
+    it('returns all the studios', () => {
+        return request.get('/studios')
+            .then(({ body }) => {
+                const { _id, name } = studioA;
+                let obj = {};
+                obj._id = studioB._id;
+                obj.name = studioB.name;
+                assert.deepEqual(body, [{ _id, name }, obj]);
             });
     });
 });
