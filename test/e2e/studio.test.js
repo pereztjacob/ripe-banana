@@ -15,6 +15,15 @@ describe('studio api', () => {
         }
     };
 
+    let studioB = {
+        name: 'StudioB',
+        address: {
+            city: 'Olympia',
+            state: 'Washington',
+            country: 'USA'
+        }
+    };
+
     it('saves and gets studio', () => {
         return request.post('/studios')
             .send(studioA)
@@ -26,6 +35,20 @@ describe('studio api', () => {
                     _id, __v
                 });
                 studioA = body;
+            });
+    });
+
+    const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
+
+    it('gets studio by id', () => {
+        return Studio.create(studioB).then(roundTrip)
+            .then(saved => {
+                studioB = saved;
+                return request.get(`/studios/${studioB._id}`);
+            })
+            .then(({ body }) => {
+                const { _id, name } = studioB;
+                assert.deepEqual(body, { _id, name });
             });
     });
 });
