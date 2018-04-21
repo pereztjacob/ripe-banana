@@ -69,6 +69,6 @@ describe.only('reviewer api', () => {
             .then(found => {
                 assert.isNull(found);
             });
-    })
+    });
 
 });
