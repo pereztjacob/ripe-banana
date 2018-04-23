@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const { Types } = require('mongoose');
 const Review = require('../../lib/models/Review');
 
-describe('reveiw model', () => {
+describe('review model', () => {
     it('review is a valid model', () => {
         const data = {
             rating: 3,

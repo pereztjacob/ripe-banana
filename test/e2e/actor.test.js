@@ -4,7 +4,7 @@ const { dropCollection } = require('./db');
 const Actor = require('../../lib/models/Actor');
 const { Types } = require('mongoose');
 
-describe.only('actor api', () => {
+describe('actor api', () => {
 
     before(() => dropCollection('actors'));
     before(() => dropCollection('films'));
@@ -65,4 +65,5 @@ describe.only('actor api', () => {
                 assert.deepEqual(body[0].name, data.name);
             });
     });
+
 });
