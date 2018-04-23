@@ -62,7 +62,7 @@ describe.only('actor api', () => {
     it('gets all actors', () => {
         return request.get('/actors')
             .then(({ body }) => {
-                assert.deepEqual(body, [data]);
+                assert.deepEqual(body[0].name, data.name);
             });
     });
 });
