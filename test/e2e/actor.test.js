@@ -4,7 +4,7 @@ const { dropCollection } = require('./db');
 const Actor = require('../../lib/models/Actor');
 const { Types } = require('mongoose');
 
-describe('actor api', () => {
+describe.only('actor api', () => {
 
     before(() => dropCollection('actors'));
     before(() => dropCollection('films'));
@@ -37,16 +37,17 @@ describe('actor api', () => {
 
     const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
 
-    it.skip('gets actor by id', () => {
+    it('gets actor by id', () => {
+        const filmD = {
+            title: 'movieD',
+            studio: Types.ObjectId(),
+            released: 1990,
+            cast: [{ part: 'lead1', actor: null }]
+        };
         return Actor.create(actor).then(roundTrip)
             .then(saved => {
                 actor = saved;
-                const filmD = {
-                    title: 'movieD',
-                    studio: Types.ObjectId(),
-                    released: 1990,
-                    cast: [{ part: 'lead1', actor: saved._id }]
-                };
+                filmD.cast[0].actor = saved._id;
                 return request.post('/films')
                     .send(filmD);
             })
@@ -55,7 +56,7 @@ describe('actor api', () => {
             }
             )
             .then(({ body }) => {
-                assert.deepEqual(body, actor);
+                assert.deepEqual(body.films[0].title, filmD.title);
             });
     });
 
