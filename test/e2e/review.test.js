@@ -53,11 +53,11 @@ describe.only('review tests', () => {
             });
     });
 
-    it.skip('returns all the reviews', () => {
+    it('returns all the reviews', () => {
         return request.get('/reviews')
             .then(({ body }) => {
-                const { _id, title } = reviewA;
-                assert.deepEqual(body, [{ _id, title }]);
+                const { _id, name } = reviewA;
+                assert.deepEqual(body, [{ _id, name }]);
             });
     });
 });
