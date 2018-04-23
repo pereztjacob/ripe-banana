@@ -3,7 +3,7 @@ const request = require('./request');
 const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
 
-describe('studio api', () => {
+describe.only('studio api', () => {
     before(() => dropCollection('studios'));
 
     let studioA = {

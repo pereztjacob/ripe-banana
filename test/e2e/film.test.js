@@ -6,7 +6,7 @@ const Film = require('../../lib/models/Film');
 const Studio = require('../../lib/models/Studio');
 
 
-describe.only('film api', () => {
+describe('film api', () => {
 
     before(() => dropCollection('films'));
     before(() => dropCollection('studios'));
