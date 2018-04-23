@@ -2,11 +2,13 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const Actor = require('../../lib/models/Actor');
+const { Types } = require('mongoose');
 
-describe('actor api', () => {
+describe.only('actor api', () => {
 
     before(() => dropCollection('actors'));
-    
+    before(() => dropCollection('films'));
+
     let data = {
         name: 'Bob',
         dob: '7/18/90',
@@ -39,10 +41,28 @@ describe('actor api', () => {
         return Actor.create(actor).then(roundTrip)
             .then(saved => {
                 actor = saved;
-                return request.get(`/studios/${actor._id}`);
+                const filmD = {
+                    title: 'movieD',
+                    studio: Types.ObjectId(),
+                    released: 1990,
+                    cast: [{ part: 'lead1', actor: saved._id }]
+                };
+                return request.post('/films')
+                    .send(filmD);
             })
+            .then(() => {
+                return request.get(`/actors/${actor._id}`);
+            }
+            )
             .then(({ body }) => {
                 assert.deepEqual(body, actor);
+            });
+    });
+
+    it('gets all actors', () => {
+        return request.get('/actors')
+            .then(({ body }) => {
+                assert.deepEqual(body, [data]);
             });
     });
 });
