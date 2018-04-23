@@ -12,7 +12,7 @@ describe.only('film api', () => {
     before(() => dropCollection('studios'));
 
     let studio = {
-        name: 'Studio',
+        name: 'MGM',
         address: {
             city: 'Seattle',
             state: 'WA',
@@ -73,8 +73,8 @@ describe.only('film api', () => {
     it('gets all films', () => {
         return request.get('/films')
             .then(({ body }) => {
-                console.log('this is body ------', body);
-                assert.deepEqual(body, [film, filmB]);
+                assert.equal(body[0].studio.name, 'MGM');
+                assert.equal(body[1].studio.name, 'MGM');
             });
     });
 });
