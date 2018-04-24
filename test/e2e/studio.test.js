@@ -2,6 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
+const Film = require('../../lib/models/Film');
 
 describe('studio api', () => {
     before(() => dropCollection('studios'));
@@ -24,6 +25,20 @@ describe('studio api', () => {
         }
     };
 
+    let starWars = {
+        title: 'Star Wars',
+        studio: null,
+        released: 1977,
+        cast: []
+    };
+
+    before(() => {
+        return Film.create(starWars).then(roundTrip)
+            .then(saved => {
+                starWars = saved;
+            });
+    });
+
     it('saves and gets studio', () => {
         return request.post('/studios')
             .send(studioA)
@@ -35,6 +50,7 @@ describe('studio api', () => {
                     _id, __v
                 });
                 studioA = body;
+                starWars.studio = _id;
             });
     });
 
