@@ -4,7 +4,7 @@ const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
 const Film = require('../../lib/models/Film');
 
-describe('studio api', () => {
+describe.only('studio api', () => {
     before(() => dropCollection('studios'));
 
     let studioA = {
@@ -50,7 +50,7 @@ describe('studio api', () => {
                     _id, __v
                 });
                 studioA = body;
-                starWars.studio = _id;
+                // starWars.studio = _id;
             });
     });
 
@@ -93,12 +93,16 @@ describe('studio api', () => {
     });
 
     it('deletes a studio', () => {
-        return request.delete(`/studios/${studioB._id}`)
-            .then(() => {
-                return Studio.findById(studioB._id);
+        starWars.studio = studioB._id;
+        return Film.create(starWars).then(roundTrip)
+            .then(saved => {
+                starWars = saved;
             })
-            .then(found => {
-                assert.isNull(found);
+            .then(() => {  
+                return request.delete(`/studios/${studioB._id}`);    
+            })
+            .then(result => {
+                assert.equal(result.status, 400);
             });
     });
 });
