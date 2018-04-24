@@ -79,6 +79,16 @@ describe.only('actor api', () => {
             });
     });
 
+    it('updates actor', () => {
+        actor.name = 'William';
+
+        return request.put(`/actors/${actor._id}`)
+            .send(actor)
+            .then(({ body }) => {
+                assert.deepEqual(body, actor);
+            });
+    });
+
     let film = {
         title: 'Big Lebowski',
         studio: Types.ObjectId(),
