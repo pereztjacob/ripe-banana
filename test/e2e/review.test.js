@@ -1,11 +1,10 @@
 const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
-// const Review = require('../../lib/models/Review');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/Film');
 
-describe('review tests', () => {
+describe.only('review tests', () => {
     before(() => dropCollection('reviews'));
 
     let reviewA = {
@@ -53,11 +52,11 @@ describe('review tests', () => {
             });
     });
 
-    it.skip('returns all the reviews', () => {
+    it('returns all the reviews', () => {
         return request.get('/reviews')
             .then(({ body }) => {
-                const { _id, name } = reviewA;
-                assert.deepEqual(body, [{ _id, name }]);
+                // const { _id, name } = reviewA;
+                assert.equal(body[0].film.title, 'ToyStory');
             });
     });
 });

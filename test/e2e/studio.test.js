@@ -4,7 +4,7 @@ const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
 const Film = require('../../lib/models/Film');
 
-describe.only('studio api', () => {
+describe('studio api', () => {
     before(() => dropCollection('studios'));
 
     let studioA = {
@@ -32,13 +32,6 @@ describe.only('studio api', () => {
         cast: []
     };
 
-    // before(() => {
-    //     return Film.create(starWars).then(roundTrip)
-    //         .then(saved => {
-    //             starWars = saved;
-    //         });
-    // });
-
     it('saves and gets studio', () => {
         return request.post('/studios')
             .send(studioA)
@@ -50,7 +43,6 @@ describe.only('studio api', () => {
                     _id, __v
                 });
                 studioA = body;
-                // starWars.studio = _id;
             });
     });
 

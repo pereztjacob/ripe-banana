@@ -6,7 +6,6 @@ const Reviewer = require('../../lib/models/Reviewer');
 describe('reviewer api', () => {
     before(() => dropCollection('reviewers'));
 
-
     let reviewerA = {
         name: 'John',
         company: 'johnreveiws.com'
