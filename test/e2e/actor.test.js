@@ -1,8 +1,9 @@
 const { assert } = require('chai');
 const request = require('./request');
+const { Types } = require('mongoose');
 const { dropCollection } = require('./db');
 const Actor = require('../../lib/models/Actor');
-const { Types } = require('mongoose');
+const Film = require('../../lib/models/Film');
 
 describe('actor api', () => {
 
@@ -37,16 +38,17 @@ describe('actor api', () => {
 
     const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
 
-    it.skip('gets actor by id', () => {
+    it('gets actor by id', () => {
+        const filmD = {
+            title: 'movieD',
+            studio: Types.ObjectId(),
+            released: 1990,
+            cast: [{ part: 'lead1', actor: null }]
+        };
         return Actor.create(actor).then(roundTrip)
             .then(saved => {
                 actor = saved;
-                const filmD = {
-                    title: 'movieD',
-                    studio: Types.ObjectId(),
-                    released: 1990,
-                    cast: [{ part: 'lead1', actor: saved._id }]
-                };
+                filmD.cast[0].actor = saved._id;
                 return request.post('/films')
                     .send(filmD);
             })
@@ -55,7 +57,7 @@ describe('actor api', () => {
             }
             )
             .then(({ body }) => {
-                assert.deepEqual(body, actor);
+                assert.deepEqual(body.films[0].title, filmD.title);
             });
     });
 
@@ -63,6 +65,47 @@ describe('actor api', () => {
         return request.get('/actors')
             .then(({ body }) => {
                 assert.deepEqual(body[0].name, data.name);
+                assert.deepEqual(body[1].name, actor.name);
+            });
+    });
+
+    it('deletes actor by id', () => {
+        return request.delete(`/actors/${data._id}`)
+            .then(() => {
+                return Actor.findById(data._id);
+            })
+            .then(found => {
+                assert.isNull(found);
+            });
+    });
+
+    it('updates actor', () => {
+        actor.name = 'William';
+
+        return request.put(`/actors/${actor._id}`)
+            .send(actor)
+            .then(({ body }) => {
+                assert.deepEqual(body, actor);
+            });
+    });
+
+    let film = {
+        title: 'Big Lebowski',
+        studio: Types.ObjectId(),
+        released: 1998,
+        cast: [{ part: 'The Dude', actor: actor._id }]
+    };
+
+    it('returns error trying to delete actor in film in DB', () => {
+        return Film.create(film).then(roundTrip)
+            .then(saved => {
+                film = saved;
+            })
+            .then(() => {
+                return request.delete(`/actors/${actor._id}`);
+            })
+            .then(result => {
+                assert.equal(result.status, 400);
             });
     });
 

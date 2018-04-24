@@ -6,7 +6,6 @@ const Reviewer = require('../../lib/models/Reviewer');
 describe('reviewer api', () => {
     before(() => dropCollection('reviewers'));
 
-
     let reviewerA = {
         name: 'John',
         company: 'johnreveiws.com'
@@ -40,7 +39,9 @@ describe('reviewer api', () => {
                 return request.get(`/reviewers/${reviewerB._id}`);
             })
             .then(({ body }) => {
-                assert.deepEqual(body, reviewerB);
+                assert.equal(body.__v, 0);
+                assert.ok(body._id);
+                assert.ok(body.reviews);
             });
     });
 
