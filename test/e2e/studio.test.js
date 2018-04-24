@@ -32,12 +32,12 @@ describe('studio api', () => {
         cast: []
     };
 
-    before(() => {
-        return Film.create(starWars).then(roundTrip)
-            .then(saved => {
-                starWars = saved;
-            });
-    });
+    // before(() => {
+    //     return Film.create(starWars).then(roundTrip)
+    //         .then(saved => {
+    //             starWars = saved;
+    //         });
+    // });
 
     it('saves and gets studio', () => {
         return request.post('/studios')

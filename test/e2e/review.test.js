@@ -53,7 +53,7 @@ describe('review tests', () => {
             });
     });
 
-    it('returns all the reviews', () => {
+    it.skip('returns all the reviews', () => {
         return request.get('/reviews')
             .then(({ body }) => {
                 const { _id, name } = reviewA;
