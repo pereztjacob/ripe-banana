@@ -34,4 +34,13 @@ describe('Auth API', () => {
             });
     });
 
+    it.only('verifies', () => {
+        return request
+            .get('/api/auth/verify')
+            .set('Authorization', token)
+            .then(({ body }) => {
+                assert.isOk(body.verified);
+            });
+    });
+
 });
