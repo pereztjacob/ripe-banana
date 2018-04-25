@@ -22,4 +22,16 @@ describe('Auth API', () => {
         assert.ok(token);
     });
 
+    it.only('verifies', () => {
+        return request 
+            .post('/api/auth/signin')
+            .send({
+                email: 'a@a.com',
+                password: 'abc'
+            })
+            .then(({ body }) => {
+                assert.ok(body.token);
+            });
+    });
+
 });
