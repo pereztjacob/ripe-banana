@@ -5,7 +5,10 @@ describe('reviewer model', () => {
     it('reviewer is a valid model', () => {
         const data = {
             name: 'Roger Ebert',
-            company: 'roger-ebert.com'
+            company: 'roger-ebert.com',
+            email: 'me@me.com',
+            hash: '12ljsdf',
+            roles: ['admin']
         };
 
         const reviewer = new Reviewer(data);

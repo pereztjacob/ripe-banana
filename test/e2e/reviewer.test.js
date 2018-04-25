@@ -3,7 +3,7 @@ const request = require('./request');
 const { dropCollection } = require('./db');
 const Reviewer = require('../../lib/models/Reviewer');
 
-describe('reviewer api', () => {
+describe.only('reviewer api', () => {
     before(() => dropCollection('reviewers'));
 
     let reviewerA = {
@@ -20,11 +20,11 @@ describe('reviewer api', () => {
         return request.post('/reviewers')
             .send(reviewerA)
             .then(({ body }) => {
-                const { _id, __v } = body;
+                const { _id, __v, roles } = body;
                 assert.ok(_id);
                 assert.deepEqual(body, {
                     ...reviewerA,
-                    _id, __v  
+                    _id, __v, roles 
                 });
                 reviewerA = body;
             });
