@@ -22,7 +22,7 @@ describe('Auth API', () => {
         assert.ok(token);
     });
 
-    it.only('verifies', () => {
+    it.only('signin', () => {
         return request 
             .post('/api/auth/signin')
             .send({
