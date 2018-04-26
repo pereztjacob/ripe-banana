@@ -16,7 +16,7 @@ describe('reviewer api', () => {
         company: 'smithreviews.com'
     };
 
-    it.skip('saves and gets reviewer', () => {
+    it('saves and gets reviewer', () => {
         return request.post('/reviewers')
             .send(reviewerA)
             .then(({ body }) => {
@@ -32,7 +32,7 @@ describe('reviewer api', () => {
 
     const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
 
-    it.skip('gets reviewer by id', () => {
+    it('gets reviewer by id', () => {
         return Reviewer.create(reviewerB).then(roundTrip)
             .then(saved => {
                 reviewerB = saved;
@@ -44,14 +44,14 @@ describe('reviewer api', () => {
             });
     });
 
-    it.skip('returns all reviewers', () => {
+    it('returns all reviewers', () => {
         return request.get('/reviewers')
             .then(({ body }) => {
                 assert.deepEqual(body, [reviewerA, reviewerB]);
             });
     });
 
-    it.skip('update a reviewer', () => {
+    it('update a reviewer', () => {
         reviewerA.name = 'Jon';
 
         return request.put(`/reviewers/${reviewerA._id}`)
@@ -61,7 +61,7 @@ describe('reviewer api', () => {
             });
     });
 
-    it.skip('deletes reviewer by id', () => {
+    it('deletes reviewer by id', () => {
         return request.delete(`/reviewers/${reviewerB._id}`)
             .then(() => {
                 return Reviewer.findById(reviewerB._id);

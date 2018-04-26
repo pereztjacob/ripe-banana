@@ -3,7 +3,7 @@ const request = require('./request');
 const { dropCollection, createToken } = require('./db');
 const Studio = require('../../lib/models/Studio');
 
-describe.only('studio api', () => {
+describe('studio api', () => {
 
     before(() => dropCollection('studios'));
     before(() => dropCollection('users'));
