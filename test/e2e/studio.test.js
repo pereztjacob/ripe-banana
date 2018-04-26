@@ -1,11 +1,15 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection } = require('./db');
+const { dropCollection, createToken } = require('./db');
 const Studio = require('../../lib/models/Studio');
-const Film = require('../../lib/models/Film');
 
-describe('studio api', () => {
+describe.only('studio api', () => {
+
     before(() => dropCollection('studios'));
+    before(() => dropCollection('users'));
+
+    let token = '';
+    before(() => createToken().then(t => token = t));
 
     let studioA = {
         name: 'StudioA',
@@ -25,15 +29,9 @@ describe('studio api', () => {
         }
     };
 
-    let starWars = {
-        title: 'Star Wars',
-        studio: null,
-        released: 1977,
-        cast: []
-    };
-
     it('saves and gets studio', () => {
         return request.post('/studios')
+            .set('Authorization', token)
             .send(studioA)
             .then(({ body }) => {
                 const { _id, __v } = body;
@@ -49,10 +47,13 @@ describe('studio api', () => {
     const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
 
     it('gets studio by id', () => {
-        return Studio.create(studioB).then(roundTrip)
-            .then(saved => {
-                studioB = saved;
-                return request.get(`/studios/${studioB._id}`);
+        return request.post('/studios')
+            .set('Authorization', token)
+            .send(studioB)
+            .then(({ body }) => {
+                studioB = body;
+                return request.get(`/studios/${studioB._id}`)
+                    .set('Authorization', token);
             })
             .then(({ body }) => {
                 assert.deepEqual(body, studioB);
@@ -61,6 +62,7 @@ describe('studio api', () => {
 
     it('returns all the studios', () => {
         return request.get('/studios')
+            .set('Authorization', token)
             .then(({ body }) => {
                 const { _id, name } = studioA;
                 let obj = {};
@@ -74,6 +76,7 @@ describe('studio api', () => {
         studioA.name = 'New name';
 
         return request.put(`/studios/${studioA._id}`)
+            .set('Authorization', token)
             .send(studioA)
             .then(({ body }) => {
                 assert.deepEqual(body, studioA);
@@ -81,20 +84,6 @@ describe('studio api', () => {
             })
             .then(updated => {
                 assert.deepEqual(updated, studioA);
-            });
-    });
-
-    it('deletes a studio', () => {
-        starWars.studio = studioB._id;
-        return Film.create(starWars).then(roundTrip)
-            .then(saved => {
-                starWars = saved;
-            })
-            .then(() => {  
-                return request.delete(`/studios/${studioB._id}`);    
-            })
-            .then(result => {
-                assert.equal(result.status, 400);
             });
     });
 });

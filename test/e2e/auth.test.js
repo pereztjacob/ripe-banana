@@ -18,11 +18,11 @@ describe('Auth API', () => {
             .then(({ body }) => token = body.token);
     });
 
-    it.only('signup', () => {
+    it('signup', () => {
         assert.ok(token);
     });
 
-    it.only('signin', () => {
+    it('signin', () => {
         return request 
             .post('/api/auth/signin')
             .send({
@@ -34,7 +34,7 @@ describe('Auth API', () => {
             });
     });
 
-    it.only('verifies', () => {
+    it('verifies', () => {
         return request
             .get('/api/auth/verify')
             .set('Authorization', token)
